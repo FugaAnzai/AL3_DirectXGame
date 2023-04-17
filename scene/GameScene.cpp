@@ -4,13 +4,22 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {}
+GameScene::~GameScene() {
+
+	delete model_;
+
+}
 
 void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+	texureHandle_ = TextureManager::Load("mario.jpg");
+	model_ = Model::Create();
+	viewprojection_.Initialize();
+	player_ = new Player();
+	player_->Initialize(model_,texureHandle_);
 }
 
 void GameScene::Update() {}
@@ -28,6 +37,8 @@ void GameScene::Draw() {
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 
+	player_->Update();
+
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	// 深度バッファクリア
@@ -41,6 +52,8 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+
+	player_->Draw(viewprojection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
