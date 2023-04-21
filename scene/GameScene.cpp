@@ -29,7 +29,27 @@ void GameScene::Initialize() {
 	player_->Initialize(model_,texureHandle_);
 }
 
-void GameScene::Update() {}
+void GameScene::Update() {
+	
+	#ifdef _DEBUG
+	
+	if (input_->GetInstance()->TriggerKey(DIK_C)) {
+		isDebugCameraActive = !isDebugCameraActive;
+	}
+
+#endif
+
+	player_->Update();
+
+	if (isDebugCameraActive) {
+		debugCamera_->Update();
+		viewprojection_.matView = debugCamera_->GetViewProjection().matView;
+		viewprojection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+	} else {
+		viewprojection_.UpdateMatrix();
+	}
+
+}
 
 void GameScene::Draw() {
 
@@ -43,8 +63,6 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
-
-	player_->Update();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -73,8 +91,6 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-
-	debugCamera_->Update();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
